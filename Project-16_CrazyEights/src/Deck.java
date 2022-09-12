@@ -1,82 +1,52 @@
-package programmer.coderj.mywindow;
+package programmer.coderj.cards;
 
-import com.godtsoft.diyjava.DIYWindow;
+import java.util.ArrayList;
+import java.util.Random;
 
-public class MyWindow extends DIYWindow {
-	protected double promptForDouble(String prompt) {
-		double i = 0;
-		print(prompt);
-		String s = input();
-		try {
-			i = Double.parseDouble(s);
+public class Deck {
+	private ArrayList<Card> cards = new ArrayList<Card>();
+	private Random rand = new Random();
+
+	public Deck() {
+		for(int i = 0; i < 52; i++) {
+			Card card = new Card(i);
+			cards.add(card);
 		}
-		// print out error message if input is not a number
-		catch (NumberFormatException e){
-			print(s + " is not a valid number. Try again.");
-			i = promptForDouble(prompt);
-		}
-		return i;
+		shuffle();
 	}
 	
-	protected int promptForInt(String prompt) {
-		int i = 0;
-		print(prompt);
-		String s = input();
-		try {
-			i = Integer.parseInt(s);
+	public String toString() {
+		String deckString = "";
+		for(int i = 0; i < cards.size(); i++) {
+			Card card = cards.get(i);
+			deckString += card + " ";
 		}
-		// print out error message if input is not a number
-		catch (NumberFormatException e){
-			print(s + " is not a valid number. Try again.");
-			i = promptForInt(prompt);
-		}
-		return i;
+		return deckString;
 	}
 	
-	protected String promptForString(String prompt) {
-		print(prompt);
-		String s = input();
-		return s;
+	public void shuffle() {
+		ArrayList<Card> shuffled = new ArrayList<Card>();
+		int numberOfTimes = cards.size();
+		for(int i = 0; i < numberOfTimes; i++) {
+			int deckSize = cards.size();
+			int pick = rand.nextInt(deckSize);
+			Card card = cards.remove(pick);
+			shuffled.add(card);
+		}
+		cards = shuffled;
 	}
 	
-	protected boolean promptForYesNo(String prompt) {
-		boolean yes = true;
-		boolean valid = false;
-		while(!valid) {
-			String YorN = promptForString("Would you like to repeat this?");
-			switch(YorN) {
-				case "Y":
-				case "y":
-					yes = true;
-					valid = true;
-					break;
-				case "N":
-				case "n":
-					yes = false;
-					valid = true;
-					break;
-				default:
-					print("Enter Y for yes, or N for no");
-					valid = false;
-			}
-		}
-		return yes;
+	public Card deal() {
+		Card card = cards.remove(0);
+		return card;
 	}
 	
-	protected char promptForChar(String prompt) {
-		char c = ' ';
-		boolean valid = false;
-		while(!valid) {
-			print(prompt);
-			String s = input();
-			if(s.length() == 1) {
-				c = s.charAt(0);
-				valid = true;
-			}
-			else {
-				c = promptForChar(prompt);
-			}
-		}
-		return c;
+	public void reuse(ArrayList<Card> newCards) {
+		cards = newCards;
 	}
+	
+	public int size() {
+		return cards.size();
+	}
+
 }
